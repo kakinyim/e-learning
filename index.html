@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EAC Statistics e-Learning Materials</title>
+    <style>
+        /* --- Reset & Core Layout --- */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* --- Global Header --- */
+        .header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 110px; /* Taller height to comfortably stack the logo above */
+            background: #1D356D;
+            color: white;
+            padding: 12px 20px;
+            position: relative;
+            z-index: 1001;
+            gap: 10px; /* Spacing between the logo layer and the text/dropdown layer */
+        }
+
+        .header-logo {
+            height: 45px;
+            width: auto;
+        }
+
+        /* Grouped title and dropdown controls */
+        .header-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .header h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: normal;
+            white-space: nowrap;
+        }
+
+        #domain-select {
+            padding: 6px 12px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+            cursor: pointer;
+            width: 320px;
+        }
+
+        .menu-btn {
+            font-size: 24px;
+            cursor: pointer;
+            display: none;
+            user-select: none;
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* --- Workspace Container --- */
+        .container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* --- Navigation Sidebar --- */
+        .sidebar {
+            width: 280px;
+            min-width: 180px;
+            max-width: 500px;
+            background: #f4f4f4;
+            padding: 20px;
+            border-right: 1px solid #ccc;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            margin-top: 0;
+            font-size: 16px;
+            color: #333;
+            border-bottom: 2px solid #1D356D;
+            padding-bottom: 8px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px;
+            margin: 8px 0;
+            text-decoration: none;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: #333;
+            background: #fff;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar a:hover, 
+        .sidebar a.active {
+            background: #e2e8f0;
+            border-color: #1D356D;
+        }
+
+        /* --- Draggable Column Resizer --- */
+        .divider {
+            width: 6px;
+            cursor: col-resize;
+            background: #ddd;
+            transition: background 0.2s;
+        }
+
+        .divider:hover {
+            background: #1D356D;
+        }
+
+        /* --- Main Content Display --- */
+        .content {
+            flex: 1;
+            background: #fff;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* --- Mobile Breakpoint (768px) --- */
+        @media (max-width: 768px) {
+            .header {
+                height: 95px;
+                padding: 10px 15px;
+            }
+
+            .header h3 {
+                display: none; /* Hide text on small screens for clean selector space */
+            }
+
+            .header-logo {
+                height: 35px;
+            }
+
+            .header-controls {
+                justify-content: center;
+            }
+
+            #domain-select {
+                width: 200px;
+                font-size: 12px;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -100%;
+                top: 95px; /* Aligns correctly with new header height */
+                bottom: 0;
+                width: 280px;
+                z-index: 1000;
+                transition: left 0.3s ease;
+                box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            }
+
+            .sidebar.show {
+                left: 0;
+            }
+
+            .divider {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- GLOBAL HEADER BAR -->
+<header class="header">
+    <!-- MOBILE HAMBURGER MENU BUTTON -->
+    <div class="menu-btn" onclick="toggleMenu()" aria-label="Toggle Navigation">☰</div>
+    
+    <!-- LOGO LAYER (TOP) -->
+    <img src="images/eac-logo.png" alt="EAC Logo" class="header-logo">
+    
+    <!-- CONTROLS LAYER (BOTTOM) -->
+    <div class="header-controls">
+        <h3>East African Community E-Learning Portal:</h3>
+        <select name="domains" id="domain-select" onchange="handleDomainChange(this.value)">
+            <option value="">--Please choose a Sector--</option>
+            <option value="fsi">Financial Sector Indicators (FSI)</option>
+            <option value="gfs">Government Finance Statistics (GFS)</option>
+            <option value="psds">Public Sector Debt Statistics (PSDS)</option>
+            <option value="mfs">Monetary and Financial Statistics (MFS)</option>
+            <option value="poverty">Poverty Statistics</option>
+            <option value="ess">External Sector Statistics (ESS)</option>
+        </select>
+    </div>
+</header>
+
+<div class="container">
+    <!-- SIDEBAR NAVIGATION -->
+    <nav class="sidebar" id="sidebar">
+        <h2>Course Modules</h2>
+        <a href="FSI/EAC_FSI_Course.html" target="contentFrame" class="active">Financial Sector Indicators (FSI)</a>
+        <a href="GFS/EAC_GFS_Course.html" target="contentFrame">Government Finance Statistics (GFS)</a>
+        <a href="GFS/EAC_PSDS_Course.html" target="contentFrame">Public Sector Debt Statistics (PSDS)</a>
+        <a href="MFS/EAC_MFS_Course.html" target="contentFrame">Monetary and Financial Statistics (MFS)</a>
+        <a href="Poverty/EAC_Poverty_Statistics_Course.html" target="contentFrame">Poverty Statistics</a>
+        <a href="ESS/EAC_ESS_BOP_IIP_Course.html" target="contentFrame">External Sector Statistics (ESS)</a>
+    </nav>
+
+    <!-- UI RESIZE DIVIDER -->
+    <div class="divider" id="divider"></div>
+
+    <!-- MAIN CONTENT WINDOW -->
+    <main class="content">
+        <iframe name="contentFrame" id="contentFrame" src="FSI/EAC_FSI_Course.html"></iframe>
+    </main>
+</div>
+
+<script>
+const sidebar = document.getElementById("sidebar");
+const divider = document.getElementById("divider");
+const links = sidebar.querySelectorAll("a");
+
+/* DESKTOP SIDEBAR DRAG RESIZE */
+let isDragging = false;
+
+divider.addEventListener("mousedown", () => {
+    isDragging = true;
+    document.body.style.cursor = "col-resize";
+    document.body.style.userSelect = "none"; 
+});
+
+document.addEventListener("mouseup", () => {
+    if (!isDragging) return;
+    isDragging = false;
+    document.body.style.cursor = "default";
+    document.body.style.userSelect = "auto";
+});
+
+document.addEventListener("mousemove", (e) => {
+    if (!isDragging) return;
+    let newWidth = e.clientX;
+    if (newWidth >= 180 && newWidth <= 500) {
+        sidebar.style.width = `${newWidth}px`;
+    }
+});
+
+/* NAVIGATION CONTROLS */
+function toggleMenu() {
+    sidebar.classList.toggle("show");
+}
+
+links.forEach(link => {
+    link.addEventListener("click", () => {
+        links.forEach(item => item.classList.remove("active"));
+        link.classList.add("active");
+        
+        if (window.innerWidth <= 768) {
+            sidebar.classList.remove("show");
+        }
+    });
+});
+
+/* DROPDOWN INTERACTION */
+function handleDomainChange(selectedValue) {
+    if (!selectedValue) return;
+
+    const domainUrls = {
+        fsi: "FSI/EAC_FSI_Course.html",
+        gfs: "GFS/EAC_GFS_Course.html",
+        psds: "GFS/EAC_PSDS_Course.html",
+        mfs: "MFS/EAC_MFS_Course.html",
+        poverty: "Poverty/EAC_Poverty_Statistics_Course.html",
+        ess: "ESS/EAC_ESS_BOP_IIP_Course.html"
+    };
+
+    const targetUrl = domainUrls[selectedValue];
+    if (targetUrl) {
+        document.getElementById("contentFrame").src = targetUrl;
+        links.forEach(item => item.classList.remove("active"));
+    }
+}
+</script>
+
+</body>
+</html>
